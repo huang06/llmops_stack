@@ -1,0 +1,22 @@
+model_list:
+  - model_name: gemma-4-E4B-it-UD-Q8_K_XL.gguf
+    litellm_params:
+      model: openai/gemma-4-E4B-it-UD-Q8_K_XL.gguf
+      api_base: http://llamacpp:8080
+      api_key: ""
+      supports_system_message: False # 👈 KEY CHANGE
+  # Default models
+  # Works for ALL Providers and needs the default provider credentials in .env
+  - model_name: "*" 
+    litellm_params:
+      model: "*"
+
+litellm_settings: # module level litellm settings - https://github.com/BerriAI/litellm/blob/main/litellm/__init__.py
+  drop_params: True
+  callbacks:
+    - langfuse_otel
+    - prometheus
+
+general_settings: 
+  master_key: sk-1234 # [OPTIONAL] Only use this if you to require all calls to contain this key (Authorization: Bearer sk-1234)
+  alerting: ["slack"] # [OPTIONAL] If you want Slack Alerts for Hanging LLM requests, Slow llm responses, Budget Alerts. Make sure to set `SLACK_WEBHOOK_URL` in your env

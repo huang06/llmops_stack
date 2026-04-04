@@ -1,0 +1,35 @@
+services:
+  llamacpp:
+    image: ghcr.io/ggml-org/llama.cpp:server-cuda
+    command:
+      # - --ctx-size
+      # - "0"
+      # - --predict
+      # - "-1"
+      - --jinja
+      - -m
+      - ${MODEL_PATH}
+      # - --log-colors
+      - --verbose
+      - --port
+      - "8080"
+      - --host
+      - 0.0.0.0
+    volumes:
+      - "${MODEL_HOST_PATH}:${MODEL_PATH}:ro"
+    # ports:
+    #   - "0.0.0.0:8080:8080"
+    networks:
+      - llm_network
+    deploy:
+      resources:
+        reservations:
+          devices:
+          - driver: nvidia
+            count: all
+            capabilities:
+              - gpu
+
+networks:
+  llm_network:
+    external: true

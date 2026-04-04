@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 440" width="720" height="440" font-family="Segoe UI, Arial, sans-serif">
+
+  <!-- Background -->
+  <rect width="720" height="440" rx="12" fill="#0f1117"/>
+
+  <!-- Title -->
+  <text x="360" y="30" text-anchor="middle" font-size="16" fill="#c9d1e0" font-weight="700">LLM Stack — Service Architecture</text>
+
+  <!-- ── Client (outside Docker network) ── -->
+  <rect x="30" y="170" width="120" height="60" rx="8" fill="#1e2330" stroke="#6c7a9c" stroke-width="1.5"/>
+  <text x="90" y="196" text-anchor="middle" font-size="13" fill="#c9d1e0" font-weight="600">Client</text>
+  <text x="90" y="215" text-anchor="middle" font-size="11" fill="#6c7a9c">Application</text>
+  <text x="90" y="248" text-anchor="middle" font-size="10" fill="#6c7a9c">(host)</text>
+
+  <!-- Docker Network boundary — starts after Client -->
+  <rect x="180" y="60" width="520" height="330" rx="10" fill="none" stroke="#4a9eff" stroke-width="1.5" stroke-dasharray="8,4"/>
+  <text x="196" y="52" font-size="13" fill="#4a9eff" font-weight="600">llm_network (Docker bridge)</text>
+
+  <!-- ── LiteLLM ── -->
+  <rect x="220" y="155" width="175" height="80" rx="8" fill="#1a2a1a" stroke="#4caf6e" stroke-width="2"/>
+  <text x="307" y="181" text-anchor="middle" font-size="14" fill="#4caf6e" font-weight="700">LiteLLM</text>
+  <text x="307" y="200" text-anchor="middle" font-size="11" fill="#8bc49a">LLM proxy / model router</text>
+  <text x="307" y="217" text-anchor="middle" font-size="11" fill="#8bc49a">port 4000</text>
+
+  <!-- ── llama.cpp ── -->
+  <rect x="490" y="100" width="150" height="80" rx="8" fill="#1a1a2e" stroke="#7c6fcd" stroke-width="2"/>
+  <text x="565" y="126" text-anchor="middle" font-size="14" fill="#7c6fcd" font-weight="700">llama.cpp</text>
+  <text x="565" y="144" text-anchor="middle" font-size="11" fill="#a89fd8">Inference engine</text>
+  <text x="565" y="162" text-anchor="middle" font-size="11" fill="#a89fd8">CUDA</text>
+
+  <!-- ── Langfuse ── -->
+  <rect x="490" y="260" width="150" height="80" rx="8" fill="#2a1a1a" stroke="#e07b4f" stroke-width="2"/>
+  <text x="565" y="286" text-anchor="middle" font-size="14" fill="#e07b4f" font-weight="700">Langfuse</text>
+  <text x="565" y="304" text-anchor="middle" font-size="11" fill="#d4a08a">Observability &amp; Tracing</text>
+  <text x="565" y="320" text-anchor="middle" font-size="11" fill="#d4a08a">port 3000</text>
+
+  <!-- Arrow: Client → LiteLLM (crosses network boundary) -->
+  <line x1="150" y1="196" x2="218" y2="193" stroke="#4caf6e" stroke-width="2" marker-end="url(#arrowGreen)"/>
+  <text x="184" y="186" text-anchor="middle" font-size="10" fill="#4caf6e">127.0.0.1:4000</text>
+
+  <!-- Arrow: LiteLLM → llama.cpp -->
+  <line x1="395" y1="178" x2="488" y2="153" stroke="#7c6fcd" stroke-width="2" marker-end="url(#arrowPurple)"/>
+  <text x="444" y="155" text-anchor="middle" font-size="11" fill="#7c6fcd">inference</text>
+
+  <!-- Arrow: llama.cpp → LiteLLM (response) -->
+  <line x1="488" y1="167" x2="395" y2="191" stroke="#7c6fcd" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrowPurple)"/>
+  <text x="444" y="192" text-anchor="middle" font-size="11" fill="#a89fd8">response</text>
+
+  <!-- Arrow: LiteLLM → Langfuse -->
+  <line x1="395" y1="215" x2="488" y2="272" stroke="#e07b4f" stroke-width="2" marker-end="url(#arrowOrange)"/>
+  <text x="447" y="253" text-anchor="middle" font-size="11" fill="#e07b4f">traces / logs</text>
+
+  <!-- Arrow markers -->
+  <defs>
+    <marker id="arrowGreen" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#4caf6e"/>
+    </marker>
+    <marker id="arrowPurple" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#7c6fcd"/>
+    </marker>
+    <marker id="arrowOrange" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#e07b4f"/>
+    </marker>
+  </defs>
+
+  <!-- Legend -->
+  <text x="30" y="415" font-size="11" fill="#6c7a9c">Solid arrow: request flow   Dashed arrow: response</text>
+
+</svg>
