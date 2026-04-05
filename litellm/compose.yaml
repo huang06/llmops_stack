@@ -15,10 +15,10 @@ services:
     ports:
       - "4000:4000" # Map the container port to the host, change the host port if necessary
     environment:
-      DATABASE_URL: "postgresql://llmproxy:dbpassword9090@db:5432/litellm"
+      DATABASE_URL: ${LITELLM_DATABASE_URL}
       STORE_MODEL_IN_DB: "True" # allows adding models to proxy via UI
     env_file:
-      - .env # Load local .env file
+      - ../.env
     depends_on:
       - db  # Indicates that this service depends on the 'db' service, ensuring 'db' starts first
     networks:
@@ -37,9 +37,9 @@ services:
     restart: always
     container_name: litellm_db
     environment:
-      POSTGRES_DB: litellm
-      POSTGRES_USER: llmproxy
-      POSTGRES_PASSWORD: dbpassword9090
+      POSTGRES_DB: ${LITELLM_DB_NAME}
+      POSTGRES_USER: ${LITELLM_DB_USER}
+      POSTGRES_PASSWORD: ${LITELLM_DB_PASSWORD}
     # ports:
     #   - "5432:5432"
     volumes:
