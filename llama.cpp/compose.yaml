@@ -8,7 +8,11 @@ services:
       # - "-1"
       - --jinja
       - -m
-      - ${MODEL_PATH}
+      - /llm/unsloth/gemma-4-E4B-it-GGUF/gemma-4-E4B-it-UD-Q8_K_XL.gguf
+      - --mmproj
+      - /llm/unsloth/gemma-4-E4B-it-GGUF/mmproj-F16.gguf
+      - --cache-ram
+      - "8192"
       # - --log-colors
       - --verbose
       - --port
@@ -16,9 +20,9 @@ services:
       - --host
       - 0.0.0.0
     volumes:
-      - "${MODEL_HOST_PATH}:${MODEL_PATH}:ro"
-    # ports:
-    #   - "0.0.0.0:8080:8080"
+      - /home/tom/llm/:/llm/:ro
+    ports:
+      - "8080:8080"
     networks:
       - llm_network
     deploy:
