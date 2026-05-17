@@ -4,7 +4,7 @@ services:
       context: .
       args:
         target: runtime
-    image: docker.litellm.ai/berriai/litellm:main-stable
+    image: litellm/litellm:v1.83.14-stable.patch.3
     #########################################
     ## Uncomment these lines to start proxy with a config.yaml file ##
     volumes:
@@ -14,11 +14,8 @@ services:
     ##############################################
     ports:
       - "4000:4000" # Map the container port to the host, change the host port if necessary
-    environment:
-      DATABASE_URL: ${LITELLM_DATABASE_URL}
-      STORE_MODEL_IN_DB: "True" # allows adding models to proxy via UI
     env_file:
-      - ../.env
+      - ./.env
     depends_on:
       - db  # Indicates that this service depends on the 'db' service, ensuring 'db' starts first
     networks:
@@ -37,11 +34,11 @@ services:
     restart: always
     container_name: litellm_db
     environment:
-      POSTGRES_DB: ${LITELLM_DB_NAME}
-      POSTGRES_USER: ${LITELLM_DB_USER}
-      POSTGRES_PASSWORD: ${LITELLM_DB_PASSWORD}
-    # ports:
-    #   - "5432:5432"
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data # Persists Postgres data across container restarts
     networks:
@@ -52,27 +49,11 @@ services:
       timeout: 5s
       retries: 10
 
-  prometheus:
-    image: prom/prometheus
-    volumes:
-      - prometheus_data:/prometheus
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-    # ports:
-    #   - "9090:9090"
-    command:
-      - "--config.file=/etc/prometheus/prometheus.yml"
-      - "--storage.tsdb.path=/prometheus"
-      - "--storage.tsdb.retention.time=15d"
-    restart: always
-    networks:
-      - llm_network
 
 networks:
   llm_network:
     external: true
 
 volumes:
-  prometheus_data:
-    driver: local
   postgres_data:
     name: litellm_postgres_data # Named volume for Postgres data persistence
