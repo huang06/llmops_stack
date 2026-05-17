@@ -14,5 +14,12 @@ curl -v -s -X POST "${LITELLM_URL}/v1/chat/completions" \
               "role": "user",
               "content": "Say hello in one sentence."
           }
-      ]
+      ],
+      "extra_body": {
+        {
+	  "metadata": {
+	    "tags": ["demo"]
+	  }
+	}
+      }
   }'
