@@ -2,26 +2,15 @@ services:
   llamacpp:
     image: ghcr.io/ggml-org/llama.cpp:server-cuda
     command:
-      # - --ctx-size
-      # - "0"
-      # - --predict
-      # - "-1"
-      - --jinja
-      - -m
-      # - /llm/HauhauCS/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-Q8_0.gguf
-      - /llm/unsloth/gemma-4-E4B-it-GGUF/gemma-4-E4B-it-UD-Q8_K_XL.gguf
-      # - --mmproj
-      # - /llm/unsloth/gemma-4-E4B-it-GGUF/mmproj-F16.gguf
-      - --cache-ram
-      - "8192"
-      # - --log-colors
-      - --verbose
+      - --models-preset
+      - "/config.ini"
       - --port
       - "8080"
       - --host
       - 0.0.0.0
     volumes:
-      - /home/tom/llm/:/llm/:ro
+      - "/home/tom/llm/:/llm/:ro"
+      - "./config.ini:/config.ini:ro"
     ports:
       - "8080:8080"
     networks:
